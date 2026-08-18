@@ -4,47 +4,32 @@ Official landing page for **UNFOOD** — the agentic smart wearable companion fo
 
 ## Live
 
-After connecting this repo to Cloudflare Pages the site will be available at:
+Connect this repo to Cloudflare Pages to get a live URL (usually `https://unfood-lp.pages.dev`).
 
-`https://unfood-lp.pages.dev`  
-(or your custom domain)
+## Deploy to Cloudflare Pages (do this once)
 
-## Local preview
-
-```bash
-npx serve .
-# or just open index.html in a browser
-```
-
-## Deploy to Cloudflare Pages (one-time)
-
-1. Go to [Cloudflare Dashboard → Pages](https://dash.cloudflare.com/?to=/:account/pages)
-2. **Create a project** → **Connect to Git**
-3. Select the repository `sree-pm/unfood-lp`
-4. Build settings:
+1. Open [Cloudflare Dashboard → Pages](https://dash.cloudflare.com/?to=/:account/pages)
+2. Create a project → Connect to Git → select **sree-pm/unfood-lp**
+3. Settings:
    - Framework preset: **None**
-   - Build command: *(leave empty)*
-   - Build output directory: `/`  (or leave default)
-5. Click **Save and Deploy**
+   - Build command: leave empty
+   - Output directory: `/`
+4. Save and Deploy
 
-Cloudflare will automatically redeploy on every push to `main`.
+Every future push to `main` will auto-redeploy.
 
-## Features
+## Local
 
-- 12 carefully designed sections
-- Fully responsive + mobile-first
-- WCAG-friendly structure & reduced-motion support
-- Cinematic dark theme with ambient gradients
-- Real product photography embedded
-- Scroll-triggered fade-up motion
-- Working waitlist form UI (backend can be wired later)
-- Premium Tesla-inspired design language
+Open `index.html` or run `npx serve .`
 
-## Project structure
+## What is included
 
-```
-index.html   ← complete single-file landing page (images embedded)
-README.md
-```
+- 12 sections with premium Tesla-inspired design
+- Real product photography of the glasses and pendant
+- Ambient radial gradients + noise texture
+- Scroll-triggered fade-up motion (respects reduced-motion)
+- Fully responsive + accessible
+- Working waitlist form UI
+- Dark cinematic theme with green health accents
 
-Built with vanilla HTML/CSS/JS. No build step required.
+Built as a single static file. No build step.
