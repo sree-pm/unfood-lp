@@ -1,29 +1,50 @@
-# UNFOOD
+# UNFOOD Landing Page
 
-Official landing page for UNFOOD — the smart wearable companion for healthy living.
+Official landing page for **UNFOOD** — the agentic smart wearable companion for zero-effort healthy living.
 
-## Local development
+## Live
 
-Just open `index.html` or serve with any static server.
+After connecting this repo to Cloudflare Pages the site will be available at:
+
+`https://unfood-lp.pages.dev`  
+(or your custom domain)
+
+## Local preview
 
 ```bash
 npx serve .
+# or just open index.html in a browser
 ```
 
-## Deploy to Cloudflare Pages
+## Deploy to Cloudflare Pages (one-time)
 
 1. Go to [Cloudflare Dashboard → Pages](https://dash.cloudflare.com/?to=/:account/pages)
-2. Create a project → Connect to Git → select `sree-pm/unfood-lp`
-3. Build settings: Framework preset = None, Build command = (empty), Output directory = `/`
-4. Deploy
+2. **Create a project** → **Connect to Git**
+3. Select the repository `sree-pm/unfood-lp`
+4. Build settings:
+   - Framework preset: **None**
+   - Build command: *(leave empty)*
+   - Build output directory: `/`  (or leave default)
+5. Click **Save and Deploy**
 
-Your site will be live at `https://unfood-lp.pages.dev` (or the custom domain you attach).
+Cloudflare will automatically redeploy on every push to `main`.
 
 ## Features
 
-- 14 carefully crafted sections
-- Fully responsive
-- WCAG 2.2 AA accessibility
-- Reduced-motion support
-- Waiting list form
-- Premium, minimal design language
+- 12 carefully designed sections
+- Fully responsive + mobile-first
+- WCAG-friendly structure & reduced-motion support
+- Cinematic dark theme with ambient gradients
+- Real product photography embedded
+- Scroll-triggered fade-up motion
+- Working waitlist form UI (backend can be wired later)
+- Premium Tesla-inspired design language
+
+## Project structure
+
+```
+index.html   ← complete single-file landing page (images embedded)
+README.md
+```
+
+Built with vanilla HTML/CSS/JS. No build step required.
