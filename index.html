@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="UNFOOD — A smart wearable companion that understands your food, your family, and your life. Voice-activated. Almost zero effort." />
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>UNFOOD — Understand Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-elevated: #111111;
+      --text: #f5f5f5;
+      --text-muted: #a3a3a3;
+      --accent: #e8e8e8;
+      --border: rgba(255,255,255,0.08);
+      --radius: 12px;
+      --max: 1120px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .container {
+      width: min(100% - 2.5rem, var(--max));
+      margin-inline: auto;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem 0;
+      background: rgba(10,10,10,0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .nav.scrolled { border-color: var(--border); }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-weight: 600;
+      font-size: 1.125rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav-cta {
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.6rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .nav-cta:hover, .nav-cta:focus-visible {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+      outline: none;
+    }
+
+    /* Sections */
+    section {
+      padding: 6rem 0;
+    }
+    @media (min-width: 768px) {
+      section { padding: 8rem 0; }
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    h1, h2, h3 {
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+    h2 { font-size: clamp(1.75rem, 4vw, 3rem); margin-bottom: 1.5rem; }
+    h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+    .lead {
+      font-size: clamp(1.125rem, 2vw, 1.375rem);
+      color: var(--text-muted);
+      max-width: 36rem;
+      font-weight: 400;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 6rem;
+      position: relative;
+    }
+    .hero-grid {
+      display: grid;
+      gap: 3rem;
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr 1fr; gap: 4rem; }
+    }
+    .hero-visual {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #0a0a0a 70%);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-visual img {
+      width: 85%;
+      max-width: 480px;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
+    }
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.9rem 1.75rem;
+      border-radius: 999px;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+    .btn-primary:hover { transform: translateY(-1px); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--text-muted); }
+
+    /* Cards & grids */
+    .grid-2 {
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+    .grid-3 {
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 800px) {
+      .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    }
+    .card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: border-color 0.25s;
+    }
+    .card:hover { border-color: rgba(255,255,255,0.18); }
+    .card p { color: var(--text-muted); font-size: 0.9375rem; }
+
+    /* Journey */
+    .journey-step {
+      display: grid;
+      gap: 1rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (min-width: 700px) {
+      .journey-step {
+        grid-template-columns: 80px 1fr;
+        align-items: start;
+      }
+    }
+    .step-num {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Form factors */
+    .form-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+    .form-card .icon-wrap {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+      background: #161616;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+    }
+
+    /* Waiting list */
+    .waitlist {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 4px);
+      padding: 2.5rem 1.75rem;
+    }
+    @media (min-width: 700px) {
+      .waitlist { padding: 3.5rem; }
+    }
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+    }
+    @media (min-width: 560px) {
+      .form-row { flex-direction: row; }
+    }
+    .form-row input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.9rem 1.25rem;
+      color: var(--text);
+    }
+    .form-row input:focus {
+      outline: none;
+      border-color: var(--text-muted);
+    }
+    .form-row input::placeholder { color: #666; }
+    .form-note {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+    }
+    .success-msg {
+      display: none;
+      margin-top: 1.25rem;
+      color: #a3e635;
+      font-weight: 500;
+    }
+
+    /* FAQ */
+    details {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 500;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after {
+      content: "+";
+      font-size: 1.25rem;
+      color: var(--text-muted);
+    }
+    details[open] summary::after { content: "−"; }
+    details p {
+      margin-top: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* Footer */
+    footer {
+      padding: 4rem 0 3rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    footer .logo { margin-bottom: 1rem; display: inline-block; }
+    footer p { color: var(--text-muted); font-size: 0.875rem; }
+
+    /* Motion helpers */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      background: var(--text);
+      color: var(--bg);
+      padding: 0.75rem 1.25rem;
+      z-index: 200;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    .skip-link:focus { top: 1rem; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav" role="banner">
+    <div class="container nav-inner">
+      <a href="#" class="logo" aria-label="UNFOOD home">UNFOOD</a>
+      <a href="#waitlist" class="nav-cta">Join waiting list</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- 1. Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container hero-grid">
+        <div class="fade-up">
+          <p class="section-label">Coming soon</p>
+          <h1 id="hero-heading">Understand every bite.<br />Almost without trying.</h1>
+          <p class="lead" style="margin-top: 1.5rem;">A smart wearable companion that sees what you buy, what you cook, and what you eat — then helps you and your family live better, one quiet decision at a time.</p>
+          <div class="hero-cta-group">
+            <a href="#waitlist" class="btn btn-primary">Join the waiting list</a>
+            <a href="#how" class="btn btn-ghost">See how it works</a>
+          </div>
+        </div>
+        <div class="hero-visual fade-up" style="transition-delay: 0.15s;">
+          <!-- Product visual: elegant smart glasses concept -->
+          <svg width="420" height="280" viewBox="0 0 420 280" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+            <title>UNFOOD smart glasses concept</title>
+            <rect x="60" y="90" width="140" height="70" rx="8" stroke="#555" stroke-width="3" fill="#1a1a1a"/>
+            <rect x="220" y="90" width="140" height="70" rx="8" stroke="#555" stroke-width="3" fill="#1a1a1a"/>
+            <path d="M200 125 H220" stroke="#555" stroke-width="3"/>
+            <path d="M60 125 H30 C20 125 15 115 15 105 V80" stroke="#555" stroke-width="3" fill="none"/>
+            <path d="M360 125 H390 C400 125 405 115 405 105 V80" stroke="#555" stroke-width="3" fill="none"/>
+            <circle cx="290" cy="125" r="4" fill="#e8e8e8" opacity="0.7"/>
+            <line x1="270" y1="110" x2="310" y2="110" stroke="#444" stroke-width="1"/>
+            <line x1="270" y1="140" x2="310" y2="140" stroke="#444" stroke-width="1"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Problem -->
+    <section aria-labelledby="problem-heading">
+      <div class="container">
+        <p class="section-label fade-up">The problem</p>
+        <h2 id="problem-heading" class="fade-up">Food is complicated.<br />Tracking it shouldn’t be.</h2>
+        <div class="grid-2" style="margin-top: 3rem;">
+          <div class="card fade-up">
+            <h3>Endless logging</h3>
+            <p>Most tools demand constant manual effort. People quit within weeks because the friction is higher than the benefit.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Fragmented advice</h3>
+            <p>Scanners, trackers, recipe apps and fridge lists live in different places. None of them know your full context or your family.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Opaque ingredients</h3>
+            <p>Labels are hard to read in the aisle. Hidden additives, processing levels and personal conflicts stay invisible until it’s too late.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>One-size-fits-all scores</h3>
+            <p>Generic ratings ignore allergies, goals, cultural preferences and the people you actually cook and eat with.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Solution -->
+    <section aria-labelledby="solution-heading" style="background: var(--bg-elevated);">
+      <div class="container">
+        <p class="section-label fade-up">The idea</p>
+        <h2 id="solution-heading" class="fade-up">UNFOOD is a quiet companion.</h2>
+        <p class="lead fade-up">You wear a discreet device. You speak a simple phrase. The rest happens in the background — with transparency, personalisation and almost no ongoing effort.</p>
+        <div class="grid-3" style="margin-top: 3.5rem;">
+          <div class="card fade-up">
+            <h3>Voice sessions</h3>
+            <p>“I’m going shopping.” “I’m cooking.” “I’m eating.” The system activates only when needed.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Automatic understanding</h3>
+            <p>Packaging, ingredients, inventory and meals are captured and analysed so you don’t have to type or search.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Family-aware guidance</h3>
+            <p>Decisions respect every profile in the household — allergies, goals and preferences included.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Form factors -->
+    <section aria-labelledby="forms-heading">
+      <div class="container">
+        <p class="section-label fade-up">Form factors</p>
+        <h2 id="forms-heading" class="fade-up">Wear it your way.</h2>
+        <p class="lead fade-up">Different people prefer different devices. UNFOOD is designed to work across multiple form factors so the experience fits your life, not the other way around.</p>
+        <div class="grid-3" style="margin-top: 3rem;">
+          <div class="card form-card fade-up">
+            <div class="icon-wrap" aria-hidden="true">
+              <svg width="48" height="32" viewBox="0 0 48 32" fill="none"><rect x="2" y="8" width="18" height="12" rx="2" stroke="#aaa" stroke-width="1.5"/><rect x="28" y="8" width="18" height="12" rx="2" stroke="#aaa" stroke-width="1.5"/><path d="M20 14h8" stroke="#aaa" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Glasses</h3>
+            <p>Visual recognition and glanceable overlays while shopping or cooking.</p>
+          </div>
+          <div class="card form-card fade-up">
+            <div class="icon-wrap" aria-hidden="true">
+              <svg width="24" height="40" viewBox="0 0 24 40" fill="none"><ellipse cx="12" cy="28" rx="8" ry="10" stroke="#aaa" stroke-width="1.5"/><path d="M12 18v-10" stroke="#aaa" stroke-width="1.5"/><circle cx="12" cy="34" r="1.5" fill="#aaa"/></svg>
+            </div>
+            <h3>Pendant</h3>
+            <p>Discreet, always-with-you companion for voice and ambient awareness.</p>
+          </div>
+          <div class="card form-card fade-up">
+            <div class="icon-wrap" aria-hidden="true">
+              <svg width="40" height="28" viewBox="0 0 40 28" fill="none"><path d="M4 20c0-8 6-14 16-14s16 6 16 14" stroke="#aaa" stroke-width="1.5" fill="none"/><circle cx="20" cy="12" r="3" stroke="#aaa" stroke-width="1.5"/></svg>
+            </div>
+            <h3>Other wearables</h3>
+            <p>Cap, clip or future devices — the intelligence stays the same.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Journey -->
+    <section id="how" aria-labelledby="journey-heading" style="background: var(--bg-elevated);">
+      <div class="container">
+        <p class="section-label fade-up">The full journey</p>
+        <h2 id="journey-heading" class="fade-up">From shelf to table.</h2>
+        <div style="margin-top: 2.5rem;">
+          <div class="journey-step fade-up">
+            <span class="step-num">01</span>
+            <div>
+              <h3>Shopping</h3>
+              <p>Look at a product. Instant suitability for you and your family appears. Ingredients are made transparent. Better options are suggested when relevant.</p>
+            </div>
+          </div>
+          <div class="journey-step fade-up">
+            <span class="step-num">02</span>
+            <div>
+              <h3>Home &amp; inventory</h3>
+              <p>As you put food away, the system quietly updates what you have, flags what is running low, and understands what can be cooked this week.</p>
+            </div>
+          </div>
+          <div class="journey-step fade-up">
+            <span class="step-num">03</span>
+            <div>
+              <h3>Cooking</h3>
+              <p>Say you are cooking. Recipes and adjustments that match available ingredients and household preferences become available hands-free.</p>
+            </div>
+          </div>
+          <div class="journey-step fade-up" style="border-bottom: none;">
+            <span class="step-num">04</span>
+            <div>
+              <h3>Eating</h3>
+              <p>Meals are logged with minimal effort. Patterns emerge over time without the daily burden of traditional tracking apps.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Technology -->
+    <section aria-labelledby="tech-heading">
+      <div class="container">
+        <p class="section-label fade-up">Technology</p>
+        <h2 id="tech-heading" class="fade-up">Built on open data.<br />Improved by agents.</h2>
+        <p class="lead fade-up">We start with the best public food databases and continuously expand coverage through careful AI enrichment and real-world contributions.</p>
+        <div class="grid-2" style="margin-top: 3rem;">
+          <div class="card fade-up">
+            <h3>Multi-source foundation</h3>
+            <p>Authoritative composition data combined with the largest collaborative product databases for packaged foods worldwide.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Agentic enrichment</h3>
+            <p>When a product is new or incomplete, vision and language models extract ingredients and nutrition so the knowledge base grows with every scan.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Deep ingredient analysis</h3>
+            <p>Beyond scores: processing level, additives, allergens and personal relevance are surfaced clearly and transparently.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Confidence &amp; correction</h3>
+            <p>Low-confidence results ask for a quick confirmation. Every correction improves the system for everyone.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Personalisation -->
+    <section aria-labelledby="personal-heading" style="background: var(--bg-elevated);">
+      <div class="container">
+        <p class="section-label fade-up">Personalisation</p>
+        <h2 id="personal-heading" class="fade-up">Designed for real households.</h2>
+        <p class="lead fade-up">One profile is rarely enough. UNFOOD understands multiple people, their restrictions, and their goals at the same time.</p>
+        <div class="grid-2" style="margin-top: 3rem;">
+          <div class="card fade-up">
+            <h3>Multiple profiles</h3>
+            <p>Self, partner, children or other household members — each with their own allergies, preferences and objectives.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Household decisions</h3>
+            <p>See at a glance whether something works for everyone or requires a thoughtful compromise.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Design philosophy -->
+    <section aria-labelledby="design-heading">
+      <div class="container">
+        <p class="section-label fade-up">Experience</p>
+        <h2 id="design-heading" class="fade-up">Calm by design.</h2>
+        <div class="grid-3" style="margin-top: 3rem;">
+          <div class="card fade-up">
+            <h3>Minimal interaction</h3>
+            <p>Speak only when you want to. The system does the rest.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>Glanceable truth</h3>
+            <p>Clear signals when they matter. Full transparency when you want to dig deeper.</p>
+          </div>
+          <div class="card fade-up">
+            <h3>No shame, no noise</h3>
+            <p>Guidance without judgment. Education instead of restriction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Privacy -->
+    <section aria-labelledby="privacy-heading" style="background: var(--bg-elevated);">
+      <div class="container">
+        <p class="section-label fade-up">Trust</p>
+        <h2 id="privacy-heading" class="fade-up">Privacy is not optional.</h2>
+        <p class="lead fade-up">Session-based sensing. Clear indicators when the device is listening or looking. On-device processing wherever possible. You stay in control of what is stored and for how long.</p>
+      </div>
+    </section>
+
+    <!-- 10. Waiting list -->
+    <section id="waitlist" aria-labelledby="waitlist-heading">
+      <div class="container">
+        <div class="waitlist fade-up">
+          <p class="section-label">Early access</p>
+          <h2 id="waitlist-heading">Join the waiting list</h2>
+          <p class="lead">Be the first to experience UNFOOD. We will only email when there is something meaningful to share.</p>
+          <form class="form-row" id="waitlist-form" novalidate>
+            <label for="email" class="visually-hidden">Email address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required autocomplete="email" aria-required="true" />
+            <button type="submit" class="btn btn-primary">Request access</button>
+          </form>
+          <p class="form-note">No spam. Unsubscribe anytime. We respect your inbox.</p>
+          <p class="success-msg" id="success-msg" role="status">Thank you. You are on the list.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. FAQ -->
+    <section aria-labelledby="faq-heading">
+      <div class="container" style="max-width: 720px;">
+        <p class="section-label fade-up">Questions</p>
+        <h2 id="faq-heading" class="fade-up">Frequently asked</h2>
+        <div style="margin-top: 2rem;">
+          <details class="fade-up">
+            <summary>Do I have to log every meal manually?</summary>
+            <p>No. The design goal is voice-triggered sessions and automatic capture. Occasional confirmation may still be needed when confidence is low.</p>
+          </details>
+          <details class="fade-up">
+            <summary>Which devices will it work with?</summary>
+            <p>We are designing for multiple form factors — glasses, pendant and others — so people can choose what feels natural.</p>
+          </details>
+          <details class="fade-up">
+            <summary>Is this medical advice?</summary>
+            <p>No. UNFOOD provides informational support based on publicly available data and the profiles you create. It is not a substitute for professional medical guidance.</p>
+          </details>
+          <details class="fade-up">
+            <summary>How do you handle privacy?</summary>
+            <p>Sensing is session-based. Clear indicators show when the device is active. We prioritise on-device processing and give you control over data retention.</p>
+          </details>
+          <details class="fade-up">
+            <summary>When will it be available?</summary>
+            <p>We are currently in early development. Joining the waiting list is the best way to be notified of private previews and launch timelines.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container">
+      <a href="#" class="logo">UNFOOD</a>
+      <p>© 2026 UNFOOD. All rights reserved.</p>
+      <p style="margin-top: 0.5rem;">A product experiment in transparent, effortless healthy living.</p>
+    </div>
+  </footer>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+
+  <script>
+    // Nav scroll state
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Fade-up on scroll (respects reduced motion)
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    } else {
+      document.querySelectorAll('.fade-up').forEach(el => el.classList.add('visible'));
+    }
+
+    // Waiting list form (demo success state)
+    const form = document.getElementById('waitlist-form');
+    const success = document.getElementById('success-msg');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = form.email.value.trim();
+      if (!email || !email.includes('@')) {
+        form.email.focus();
+        return;
+      }
+      form.style.display = 'none';
+      success.style.display = 'block';
+      // In production: send to your backend / Formspree / etc.
+    });
+  </script>
+</body>
+</html>
